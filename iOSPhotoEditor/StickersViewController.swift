@@ -39,7 +39,7 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
         
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
-        pageControl.numberOfPages = 2
+        pageControl.numberOfPages = 0 < stickers.count ? 2 : 1
         
         holdView.layer.cornerRadius = 3
         let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(StickersViewController.panGesture))
@@ -48,27 +48,28 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func configureCollectionViews() {
-        
-        let frame = CGRect(x: 0,
-                           y: 0,
-                           width: UIScreen.main.bounds.width,
-                           height: view.frame.height - 40)
-        
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        let width = (CGFloat) ((screenSize.width - 30) / 3.0)
-        layout.itemSize = CGSize(width: width, height: 100)
-        
-        collectioView = UICollectionView(frame: frame, collectionViewLayout: layout)
-        collectioView.backgroundColor = .clear
-        scrollView.addSubview(collectioView)
-        
-        collectioView.delegate = self
-        collectioView.dataSource = self
-        
-        collectioView.register(
-            UINib(nibName: "StickerCollectionViewCell", bundle: Bundle(for: StickerCollectionViewCell.self)),
-            forCellWithReuseIdentifier: "StickerCollectionViewCell")
+        if 0 < stickers.count {
+            let frame = CGRect(x: 0,
+                               y: 0,
+                               width: UIScreen.main.bounds.width,
+                               height: view.frame.height - 40)
+            
+            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+            let width = (CGFloat) ((screenSize.width - 30) / 3.0)
+            layout.itemSize = CGSize(width: width, height: 100)
+            
+            collectioView = UICollectionView(frame: frame, collectionViewLayout: layout)
+            collectioView.backgroundColor = .clear
+            scrollView.addSubview(collectioView)
+            
+            collectioView.delegate = self
+            collectioView.dataSource = self
+            
+            collectioView.register(
+                UINib(nibName: "StickerCollectionViewCell", bundle: Bundle(for: StickerCollectionViewCell.self)),
+                forCellWithReuseIdentifier: "StickerCollectionViewCell")
+        }
         
         //-----------------------------------
         
@@ -115,18 +116,30 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectioView.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: UIScreen.main.bounds.width,
-                                     height: view.frame.height - 40)
         
-        emojisCollectioView.frame = CGRect(x: scrollView.frame.size.width,
-                                           y: 0,
-                                           width: UIScreen.main.bounds.width,
-                                           height: view.frame.height - 40)
-        
-        scrollView.contentSize = CGSize(width: 2.0 * screenSize.width,
-                                        height: scrollView.frame.size.height)
+        if 0 < stickers.count {
+            collectioView.frame = CGRect(x: 0,
+                                         y: 0,
+                                         width: UIScreen.main.bounds.width,
+                                         height: view.frame.height - 40)
+            
+            emojisCollectioView.frame = CGRect(x: scrollView.frame.size.width,
+                                               y: 0,
+                                               width: UIScreen.main.bounds.width,
+                                               height: view.frame.height - 40)
+            
+            scrollView.contentSize = CGSize(width: 2.0 * screenSize.width,
+                                            height: scrollView.frame.size.height)
+        }
+        else {
+            emojisCollectioView.frame = CGRect(x: 0,
+                                               y: 0,
+                                               width: UIScreen.main.bounds.width,
+                                               height: view.frame.height - 40)
+            
+            scrollView.contentSize = CGSize(width: screenSize.width,
+                                            height: scrollView.frame.size.height)
+        }
     }
     
     override func didReceiveMemoryWarning() {
