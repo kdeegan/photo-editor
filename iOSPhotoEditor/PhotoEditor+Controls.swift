@@ -25,7 +25,7 @@ extension PhotoEditorViewController {
      //MARK: Top Toolbar
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        self.photoEditorDelegate?.canceledEditing()
+        self.photoEditorDelegate?.canceledEditing(controller: self)
     }
 
     @IBAction func cropButtonTapped(_ sender: UIButton) {
@@ -104,7 +104,7 @@ extension PhotoEditorViewController {
     
     @IBAction func continueButtonPressed(_ sender: Any) {
         let img = self.canvasView.toImage()
-        photoEditorDelegate?.doneEditing(image: img)
+        photoEditorDelegate?.doneEditing(controller: self, image: img)
     }
 
     //MAKR: helper methods
